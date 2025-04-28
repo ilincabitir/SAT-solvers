@@ -1,13 +1,13 @@
-
 ####### Function for printing clause set ########
-def print_clause_set(clauses):
+def print_clause_set(clauses, p=False):
     idx = 1
     for clause in clauses:
-        if clause:
-            print(f"{idx}: {set(clause)}")
+        if p:
+            if clause:
+                print(f"{idx}: {set(clause)}")
+            else:
+                print("EMPTY SET")
             idx += 1
-        else:
-            print("EMPTY SET")
 
 ####### Function for reading from file ########
 def load_from_file(filename):
@@ -29,6 +29,7 @@ def literal_set(clauses):
 
 
 ######Functions for RESOLUTION #######
+
 def resolve(ci, cj):
     resolvents = []
     for lit in ci:
@@ -42,9 +43,7 @@ def is_tautology(clause):
     return any(-lit in clause for lit in clause)
 
 
-
 ######Functions for DP and DPLL #######
-
 
 def is_unit_clause(clause):
     return len(clause) == 1
@@ -52,14 +51,14 @@ def is_unit_clause(clause):
 def find_unit_clauses(clauses):
     return {next(iter(c)) for c in clauses if is_unit_clause(c)}
 
-def unit_clause_rule(clauses):
+def unit_clause_rule(clauses, p=False):
     while True:
         unit_literals = find_unit_clauses(clauses)
         if not unit_literals:
             break
         for lit in unit_literals:
             if clauses and clauses != {frozenset()}:
-                print(f"Applying unit clause rule with literal {lit}")
+                if p: print(f"Applying unit clause rule with literal {lit}")
                 clauses = {c for c in clauses if lit not in c}
                 neg_literal = -lit
                 new_clauses = set()
@@ -72,10 +71,9 @@ def unit_clause_rule(clauses):
                     else:
                         new_clauses.add(clause)
                 clauses = new_clauses
-                print_clause_set(clauses)
+                print_clause_set(clauses, p)
+
     return clauses
-
-
 
 
 def find_pure_literals(clauses):
@@ -86,27 +84,19 @@ def find_pure_literals(clauses):
     return pure_literals
 
 
-def pure_literal_rule(clauses):
+def pure_literal_rule(clauses, p=False):
     while True:
         if not clauses:
             return clauses
-
         pure_literals = find_pure_literals(clauses)
         if not pure_literals:
             break
-
         for lit in pure_literals:
             if clauses == {frozenset()}:
                 return clauses
-            print(f"Applying pure literal rule for {lit}")
+            if p: print(f"Applying pure literal rule for {lit}")
             clauses = {clause for clause in clauses if lit not in clause}
-            print_clause_set(clauses)
-
+            print_clause_set(clauses, p)
             if not clauses:
                 return clauses
     return clauses
-
-
-
-
-

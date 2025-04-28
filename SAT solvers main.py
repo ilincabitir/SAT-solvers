@@ -1,19 +1,17 @@
 from Functions import *
 from Methods import *
 
-
-def resolution_solver(clauses):
+def resolution_solver(clauses, p=False):
     clauses = [frozenset(clause) for clause in clauses]
     idx = 1
-    '''
+
     for clause in clauses:
-        print(f"{idx}: {set(clause)}")
+        if p: print(f"{idx}: {set(clause)}")
         idx += 1
-    '''
+
     while True:
         new_clause_set = set()
         clause_set = set(clauses)
-
         if not clauses:
             print("SATISFIABLE")
             return True
@@ -24,32 +22,32 @@ def resolution_solver(clauses):
         for (ci, cj) in clause_pairs:
             resolvents = resolve(ci, cj)
             for resolvent in resolvents:
-                frozen_resolvent = frozenset(resolvent)
-                if not frozen_resolvent:
-                    print(f"({idx}) {{}} from {set(ci)} and {set(cj)}")
+                resolvent = frozenset(resolvent)
+                if not resolvent:
+                    if p:
+                        print(f"({idx}) {{}} from {set(ci)} and {set(cj)}")
                     print("UNSATISFIABLE")
                     return False
-
-                if frozen_resolvent not in clause_set and frozen_resolvent not in new_clause_set:
-                    print(f"{idx}: {set(resolvent)} from {set(ci)} and {set(cj)}")
-                    new_clause_set.add(frozen_resolvent)
+                if resolvent not in clause_set and resolvent not in new_clause_set:
+                    if p: print(f"{idx}: {set(resolvent)} from {set(ci)} and {set(cj)}")
+                    new_clause_set.add(resolvent)
                     idx += 1
         if not new_clause_set:
-            print("\nNo new resolvent to be added")
+            if p:
+                print("\n  No new resolvent to be added")
             print("SATISFIABLE")
             return True
         clauses.extend(new_clause_set)
 
 
-def dp_solver(clauses):
-    print_clause_set(clauses)
-
-    clauses = unit_clause_rule(clauses)
+def dp_solver(clauses, p=False):
+    print_clause_set(clauses, p)
+    clauses = unit_clause_rule(clauses, p)
     if clauses == {frozenset()}:
-        print("UNSATISFIABLE")
+        print("  UNSATISFIABLE")
         return False
 
-    clauses = pure_literal_rule(clauses)
+    clauses = pure_literal_rule(clauses, p)
     if clauses == {frozenset()}:
         print("UNSATISFIABLE")
         return False
@@ -58,49 +56,72 @@ def dp_solver(clauses):
         print("SATISFIABLE")
         return True
 
-    # Otherwise, need to use resolution
-    print("Can't apply anymore DP rules, applying resolution")
-    return resolution_solver(clauses)
+    if p: print("Can't apply anymore DP rules, applying resolution")
+    return resolution_solver(clauses, p)
 
 
-def dpll(clauses):
+def dpll(clauses, s, splits=0, p=False):
+    print_clause_set(clauses, p)
+    clauses = unit_clause_rule(clauses, p)
+    e = {frozenset()}
 
-    clauses = unit_clause_rule(clauses)
-    if clauses == {frozenset()}:
-        return False
+    if e in clauses or clauses == e:
+        if p: print(f"UNSATISFIABLE (contains empty clause)")
+        return False, splits
     elif not clauses:
-        return True
-    clauses = pure_literal_rule(clauses)
+        if p: print(f"SATISFIABLE (no clauses left)")
+        return True, splits
+
+    clauses = pure_literal_rule(clauses, p)
     if not clauses:
-        return True
+        if p: print(f"SATISFIABLE (pure literal rule)")
+        return True, splits
+
+    if p: print(f"No more unit clause or pure literal rules, choosing a literal to branch on...")
+    s += 1
     l = literal_choice(clauses, "first_literal")
+    if p: print(f"Adding literal {l} to positive clause set")
+
+    # Increment splits when a literal choice is made
+    splits += 1
+
+    # Positive branch
     new_clauses_pos = clauses.copy()
     new_clauses_pos.add(frozenset({l}))
-    print_clause_set(new_clauses_pos)
-    new_clauses_pos = unit_clause_rule(new_clauses_pos)
-    if dpll(new_clauses_pos):
-        return True
+    print_clause_set(new_clauses_pos, p)
+
+    if p: print(f"Recursively calling DPLL with positive branch for literal {l}")
+    result, splits = dpll(new_clauses_pos, s, splits, p)
+    if result:
+        return True, splits
+
+    # Negative branch
+    if p: print(f"Adding literal {l}, to negative clause set")
     new_clauses_neg = clauses.copy()
     new_clauses_neg.add(frozenset({-l}))
-    new_clauses_neg = unit_clause_rule(new_clauses_neg)
-    print_clause_set(new_clauses_neg)
-    return dpll(new_clauses_neg)
+    print_clause_set(new_clauses_neg, p)
+
+    if p: print(f"Recursively calling DPLL with negative branch for literal {-l}")
+    return dpll(new_clauses_neg, s, splits, p)
 
 
-def dpll_solver(clauses):
-    if dpll(clauses):
+def dpll_solver(clauses, p=False):
+    s = 0
+    if p: print("Starting DPLL Solver:")
+    result, splits = dpll(clauses, s, 0, p=p)
+    if result:
         print("SATISFIABLE")
     else:
         print("UNSATISFIABLE")
+    if p: print(f"Number of splits: {splits}")
 
 
-
-###### MAIN ######
+###### MAIN #######
 
 clauses = load_from_file("clauses1.txt")
-#resolution_solver(clauses)
-#dp_solver(clauses)
-dpll_solver(clauses)
-
-
-
+print("\n--- Resolution Solver Output ---")
+resolution_solver(clauses, p=False)
+print("\n--- DP Solver Output ---")
+dp_solver(clauses, p=False)
+print("\n--- DPLL Solver Output ---")
+dpll_solver(clauses, p=False)
