@@ -44,7 +44,7 @@ def dp_solver(clauses, p=False):
     print_clause_set(clauses, p)
     clauses = unit_clause_rule(clauses, p)
     if clauses == {frozenset()}:
-        print("  UNSATISFIABLE")
+        print("UNSATISFIABLE")
         return False
 
     clauses = pure_literal_rule(clauses, p)
@@ -79,13 +79,13 @@ def dpll(clauses, s, splits=0, p=False):
 
     if p: print(f"No more unit clause or pure literal rules, choosing a literal to branch on...")
     s += 1
-    l = literal_choice(clauses, "first_literal")
+    l = literal_choice(clauses, "moms")
     if p: print(f"Adding literal {l} to positive clause set")
 
-    # Increment splits when a literal choice is made
+
     splits += 1
 
-    # Positive branch
+
     new_clauses_pos = clauses.copy()
     new_clauses_pos.add(frozenset({l}))
     print_clause_set(new_clauses_pos, p)
@@ -95,7 +95,6 @@ def dpll(clauses, s, splits=0, p=False):
     if result:
         return True, splits
 
-    # Negative branch
     if p: print(f"Adding literal {l}, to negative clause set")
     new_clauses_neg = clauses.copy()
     new_clauses_neg.add(frozenset({-l}))
@@ -120,8 +119,8 @@ def dpll_solver(clauses, p=False):
 
 clauses = load_from_file("clauses1.txt")
 print("\n--- Resolution Solver Output ---")
-resolution_solver(clauses, p=False)
+#resolution_solver(clauses, p=False)
 print("\n--- DP Solver Output ---")
-dp_solver(clauses, p=False)
+#dp_solver(clauses, p=False)
 print("\n--- DPLL Solver Output ---")
 dpll_solver(clauses, p=False)
