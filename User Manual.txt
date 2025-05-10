@@ -1,6 +1,6 @@
 Overview:
 
-This program is a SAT (Satisfiability solver that can be used to solve Boolean satisfiability problems through different methods (Resolution, DP ,DPLL).
+This program is a SAT (Satisfiability) solver that can be used to solve Boolean satisfiability problems through different methods (Resolution, DP ,DPLL).
 The user can choose which solver to use and then apply it to a set of clauses read by the program from a text file.
 
 Steps in using the program:
@@ -13,11 +13,11 @@ Example:
 -1 2 0
 2 -3 0
 
-2. Then open the main solver python file (SAT solvers main.py) and load you CNF file with its specific path.
+2. Then open the main solver Python file (SAT solvers main.py) and load you CNF file with its specific path.
 Example: 
 file_name = "file.txt"
 
-3. After loading the file, choose which solver/s you want to use. When receiving the program, all of the solver function calls are commented, so just remove the comment from the wanted function calls. 
+3. After loading the file, choose which solver/s you want to use. When receiving the program, all of the solver function calls are commented, so just remove the comment from the desired function calls. 
 
 4.Optional: If you want to see what the program does in more detail (for debugging purposes), you can set the p parameter to 'True' in the solver functions. When the p parameter is set to true, the program outputs everything on the screen along with helpful messages.
 Example:
