@@ -1,0 +1,36 @@
+ DPLL first_literal,  test cases/125 var 538 cl/C6.1.cnf, 32.416381 seconds
+------------
+ DPLL random_literal,  test cases/125 var 538 cl/C6.1.cnf, 104.961536 seconds
+------------
+ DPLL most_frequent_literal,  test cases/125 var 538 cl/C6.1.cnf, 2.508775 seconds
+------------
+ DPLL dlis,  test cases/125 var 538 cl/C6.1.cnf, 0.976240 seconds
+------------
+ DPLL jeroslow_wang,  test cases/125 var 538 cl/C6.1.cnf, 1.426379 seconds
+------------
+ DPLL moms,  test cases/125 var 538 cl/C6.1.cnf, 0.090327 seconds
+------------
+ DPLL first_literal,  test cases/125 var 538 cl/C6.2.cnf, 0.013735 seconds
+------------
+ DPLL random_literal,  test cases/125 var 538 cl/C6.2.cnf, 34.659599 seconds
+------------
+ DPLL most_frequent_literal,  test cases/125 var 538 cl/C6.2.cnf, 1.353737 seconds
+------------
+ DPLL dlis,  test cases/125 var 538 cl/C6.2.cnf, 0.511807 seconds
+------------
+ DPLL jeroslow_wang,  test cases/125 var 538 cl/C6.2.cnf, 0.700013 seconds
+------------
+ DPLL moms,  test cases/125 var 538 cl/C6.2.cnf, 0.018865 seconds
+------------
+ DPLL first_literal,  test cases/125 var 538 cl/C6.3.cnf, 177.519473 seconds
+------------
+ DPLL random_literal,  test cases/125 var 538 cl/C6.3.cnf, 508.704120 seconds
+------------
+ DPLL most_frequent_literal,  test cases/125 var 538 cl/C6.3.cnf, 6.337873 seconds
+------------
+ DPLL dlis,  test cases/125 var 538 cl/C6.3.cnf, 5.108544 seconds
+------------
+ DPLL jeroslow_wang,  test cases/125 var 538 cl/C6.3.cnf, 2.722197 seconds
+------------
+ DPLL moms,  test cases/125 var 538 cl/C6.3.cnf, 2.065698 seconds
+------------

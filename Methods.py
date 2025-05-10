@@ -1,9 +1,19 @@
 import random
-from Functions import literal_set, load_from_file
+from Functions import literal_set
 from collections import Counter
 
 
 def literal_choice(clauses, method):
+    '''
+
+   Function that selects a literal based on the chosen method. The method must be one of the options below:
+   "first_literal" - Selects the first literal found in the first clause
+   "random_literal" - Randomly selects a literal from the set of all literals in the formula
+   "most_frequent_literal" - Chooses the literal that appears most frequently (positive or negative) in all clauses
+   "dlis" - Counts occurrences of each literal and its negation, then chooses the literal with the highest combined count
+   "jeroslow_wang" - Picks the literal with the highest score, computed by a specific formula
+   "moms" - Finds the shortest clauses and chooses the literal that appears most within those
+    '''
     if method == "first_literal":
         return next(iter(next(iter(clauses))))
 

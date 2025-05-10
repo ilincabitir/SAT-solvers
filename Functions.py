@@ -8,6 +8,16 @@ def print_clause_set(clauses, p=False):
             else:
                 print("EMPTY SET")
             idx += 1
+######Function to write results in file########
+def log_results(algorithm_name, file_name, elapsed_time):
+    try:
+        with open("test_results.txt", "a") as log_file:
+            log_file.write(f" {algorithm_name},  {file_name}, {elapsed_time:.6f} seconds\n")
+            log_file.write("------------\n")  # Add the line of dashes
+    except Exception as e:
+        print(f"Error writing to file: {e}")
+
+
 
 ####### Function for reading from file ########
 def load_from_file(filename):
@@ -29,8 +39,12 @@ def literal_set(clauses):
 
 
 ######Functions for RESOLUTION #######
-
 def resolve(ci, cj):
+    '''
+    Function which attempts to resolve two clauses ci and cj
+    by eliminating the pair of complementary literals.
+    It returns a list of resolvent clauses that are not tautologies.
+    '''
     resolvents = []
     for lit in ci:
         if -lit in cj:
@@ -44,14 +58,24 @@ def is_tautology(clause):
 
 
 ######Functions for DP and DPLL #######
-
 def is_unit_clause(clause):
+    '''
+    Function which returns True if given clause only contains one literal (is a unit clause)
+    '''
     return len(clause) == 1
 
 def find_unit_clauses(clauses):
+    '''
+    Fucntion which identifies all unit clauses in a set of clauses.
+    '''
     return {next(iter(c)) for c in clauses if is_unit_clause(c)}
 
 def unit_clause_rule(clauses, p=False):
+    '''
+    Function which applies the unit clause rule repeatedly:
+    assigns values to satisfy unit clauses and simplifies the remaining formula accordingly.
+    If a contradiction is found, the function returns an empty clause.
+    '''
     while True:
         unit_literals = find_unit_clauses(clauses)
         if not unit_literals:
@@ -77,6 +101,10 @@ def unit_clause_rule(clauses, p=False):
 
 
 def find_pure_literals(clauses):
+    '''
+
+    Function which returns all pure literals in the clause set (literals that appear with only one polarity, either positive or negative)
+    '''
     literals = set()
     for clause in clauses:
         literals.update(clause)
@@ -85,6 +113,11 @@ def find_pure_literals(clauses):
 
 
 def pure_literal_rule(clauses, p=False):
+    '''
+
+    Function which applies the pure literal rule iteratively:
+    removes all clauses containing pure literals.
+    '''
     while True:
         if not clauses:
             return clauses
@@ -94,7 +127,7 @@ def pure_literal_rule(clauses, p=False):
         for lit in pure_literals:
             if clauses == {frozenset()}:
                 return clauses
-            if p: print(f"Applying pure literal rule for {lit}")
+            if p: print(f"Applying pure literal rule for literal {lit}")
             clauses = {clause for clause in clauses if lit not in clause}
             print_clause_set(clauses, p)
             if not clauses:
